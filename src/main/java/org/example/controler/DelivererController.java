@@ -10,13 +10,13 @@ public class DelivererController {
      public Deliverer setDeliverer() {
         Scanner scan = new Scanner(System.in).useDelimiter("\\n");
         System.out.println("New deliverer:");
-        System.out.printf("Name        : ");
+        System.out.print("Name        : ");
         deliverer.setName(scan.next());
         System.out.println();
-        System.out.printf("Short name  : ");
+        System.out.print("Short name  : ");
         deliverer.setShortName(scan.next());
         System.out.println();
-        System.out.printf("Bank account: ");
+        System.out.print("Bank account: ");
         deliverer.setBankAccount(scan.next("[0-9]{2} [0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}"));
         scan.close();
         return deliverer;

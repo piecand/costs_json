@@ -8,18 +8,27 @@ import org.example.model.Payment;
 import org.example.repository.DelivererRepository;
 import org.example.repository.PaymentRepository;
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         DelivererRepository delivererRepository = new DelivererRepository();
         PaymentRepository paymentRepository = new PaymentRepository();
         DelivererController delivererController = new DelivererController();
 
 
-        new Deliverer("SOLID", "Solid Sp  z o.o.", "52 1240 6960 2022 0000 0048 9005");
-        new Deliverer("ORANGE", "Orange Polska S.A.", "40 1140 1241 1068 0000 1810 7926");
+        Deliverer deliverer1 = new Deliverer("SOLID", "Solid Sp  z o.o.", "52 1240 6960 2022 0000 0048 9005");
+        Deliverer deliverer2 = new Deliverer("ORANGE", "Orange Polska S.A.", "40 1140 1241 1068 0000 1810 7926");
 
+        delivererRepository.addDeliver(deliverer1);
+        delivererRepository.addDeliver(deliverer2);
+
+        Payment payment1 = new Payment(2022, 5, 12, 1, 30.00d, "monthly payment");
+        paymentRepository.addPayment(payment1);
+        paymentRepository.addPayment(payment1);
+        paymentRepository.addPayment(payment1);
 
 
         System.out.println("Number of deliverers: " + delivererRepository.deliverers.size());
@@ -36,7 +45,7 @@ public class Main {
         System.out.println("Value for deliver no 1 in 2022 on 5: " + paymentRepository.getPaymentValue(2022, 5, 1));
 
         JsonFile outputFile = new JsonFile();
-//        outputFile.writeJsonFile(delivererRepository, paymentRepository, "dane.json");
+        outputFile.writeJsonFile(delivererRepository, paymentRepository, "dane.json");
 
         outputFile.readJsonFile(delivererRepository, paymentRepository, "dane.json");
 

@@ -2,11 +2,6 @@ package org.example.model;
 
 import org.json.simple.JSONObject;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 public class Deliverer {
 
     private static int noId = 0;

@@ -8,17 +8,21 @@ public class Payment {
     int day;
     int delivererId;
     double amount;
+    String title;
 
     public Payment() {
     }
 
-    public Payment(int year, int month, int day, int delivererId, double amount) {
+    public Payment(int year, int month, int day, int delivererId, double amount, String title) {
         this.year = year;
         this.month = month;
         this.day = day;
         this.delivererId = delivererId;
         this.amount = amount;
+        this.title = title;
+
     }
+
 
     public int getYear() {
         return year;
@@ -68,6 +72,7 @@ public class Payment {
         paymentJson.put("day", day);
         paymentJson.put("delivererId", delivererId);
         paymentJson.put("amount", amount);
+        paymentJson.put("title", title);
 
         return paymentJson;
     }
@@ -80,6 +85,7 @@ public class Payment {
                 ", day=" + day +
                 ", delivererId=" + delivererId +
                 ", amount=" + amount +
+                ", title=" + title +
                 '}';
     }
 }
