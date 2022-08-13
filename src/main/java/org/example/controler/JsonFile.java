@@ -1,102 +1,60 @@
 package org.example.controler;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.example.model.Deliverer;
 import org.example.model.Payment;
 import org.example.repository.DelivererRepository;
 import org.example.repository.PaymentRepository;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonFile {
 
     int noId = 0;
     public void writeJsonFile(DelivererRepository delivererRepository,
                               PaymentRepository paymentRepository,
-                              String name) {
+                              String name) throws IOException {
 
-        JSONObject jsonObject = new JSONObject();
-        JSONArray jasonDelivererArray = new JSONArray();
-        JSONArray jasonPaymentArray = new JSONArray();
+        ObjectMapper delivererMapper = new ObjectMapper();
+        delivererMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        FileOutputStream fileDeliverer = new FileOutputStream(name + ".del");
+        delivererMapper.writeValue(fileDeliverer, delivererRepository.deliverers);
+        fileDeliverer.close();
 
-        for (Deliverer d : delivererRepository.getDeliverers()) {
-            jasonDelivererArray.add(d.toJason());
-        }
+        ObjectMapper paymentMapper = new ObjectMapper();
+        paymentMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        FileOutputStream filePayment = new FileOutputStream(name + ".pay");
+        delivererMapper.writeValue(filePayment, paymentRepository.payments);
+        filePayment.close();
 
-        for (Payment p : paymentRepository.getPayments()) {
-            jasonPaymentArray.add(p.toJason());
-        }
-
-        jsonObject.put("Deliverer", jasonDelivererArray);
-        jsonObject.put("Payment", jasonPaymentArray);
-
-        try (FileWriter file = new FileWriter(name)) {
-            file.write(jsonObject.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void readJsonFile(DelivererRepository delivererRepository,
                              PaymentRepository paymentRepository,
-                             String name) {
+                             String name) throws IOException {
 
-        try (FileReader reader = new FileReader(name)) {
-            JSONObject jsonObject;
-            JSONArray jsonDelivererList;
-            JSONArray jsonPaymentList;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
 
-            JSONParser jsonParser = new JSONParser();
+        InputStream fileDeliverer = new FileInputStream(name + ".del");
+        delivererRepository.deliverers.clear();
+        delivererRepository.deliverers = mapper.readValue(fileDeliverer, List.class);
 
-            if (delivererRepository.deliverers.size() > 0) {
-                delivererRepository.deliverers.clear();
-            }
+        fileDeliverer.close();
 
-            if (paymentRepository.payments.size() > 0) {
-                paymentRepository.payments.clear();
-            }
+        InputStream filePayment = new FileInputStream(name + ".pay");
+        paymentRepository.payments.clear();
+        paymentRepository.payments = mapper.readValue(filePayment, List.class);
+        filePayment.close();
 
-            jsonObject = (JSONObject) jsonParser.parse(reader);
-
-            jsonDelivererList = (JSONArray) jsonObject.get("Deliverer");
-            jsonDelivererList.forEach(del -> delivererRepository.addDeliver(parseDelivererObject((JSONObject) del)));
-
-            jsonPaymentList = (JSONArray) jsonObject.get("Payment");
-            jsonPaymentList.forEach(del -> paymentRepository.addPayment(parsePaymentObject((JSONObject) del)));
-
-
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
     }
 
-    private Payment parsePaymentObject(JSONObject del) {
-        return new Payment(
-                ((Long) del.get("year")).intValue(),
-                ((Long) del.get("month")).intValue(),
-                ((Long) del.get("day")).intValue(),
-                ((Long)  del.get("delivererId")).intValue(),
-                (Double) del.get("amount"),
-                (String) del.get("title"));
-    }
-
-    private Deliverer parseDelivererObject(JSONObject del) {
-        Deliverer deliverer = new Deliverer(del.get("shortName").toString(),
-                del.get("name").toString(),
-                del.get("bankAccount").toString());
-        Long idL = (Long) del.get("id");
-        int id = idL.intValue();
-        deliverer.setId(id);
-        if (id > noId) {
-            noId = id;
-        }
-        return deliverer;
-    }
 }
 

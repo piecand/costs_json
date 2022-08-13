@@ -1,7 +1,5 @@
 package org.example.model;
 
-import org.json.simple.JSONObject;
-
 public class Deliverer {
 
     private static int noId = 0;
@@ -51,17 +49,6 @@ public class Deliverer {
 
     public void setBankAccount(String bankAccount) {
         this.bankAccount = bankAccount;
-    }
-
-    public JSONObject toJason() {
-        JSONObject deliverJson = new JSONObject();
-
-        deliverJson.put("id", id);
-        deliverJson.put("shortName", shortName);
-        deliverJson.put("name", name);
-        deliverJson.put("bankAccount", bankAccount);
-
-        return deliverJson;
     }
 
     @Override

@@ -44,10 +44,12 @@ public class Main {
 
         System.out.println("Value for deliver no 1 in 2022 on 5: " + paymentRepository.getPaymentValue(2022, 5, 1));
 
-        JsonFile outputFile = new JsonFile();
-        outputFile.writeJsonFile(delivererRepository, paymentRepository, "dane.json");
+        JsonFile file = new JsonFile();
 
-        outputFile.readJsonFile(delivererRepository, paymentRepository, "dane.json");
+        file.writeJsonFile(delivererRepository, paymentRepository, "data");
+        file.readJsonFile(delivererRepository, paymentRepository, "data");
+
+        System.out.println("Number of deliverers after reading from file: " + delivererRepository.deliverers.size());
 
         if (delivererRepository.deliverers.size() > 0) {
             System.out.println(delivererRepository.deliverers.size());
@@ -58,6 +60,10 @@ public class Main {
             System.out.println(paymentRepository.payments.size());
         } else {
             System.out.println("Payment Repository is empty!");
+        }
+
+        for (Payment p : paymentRepository.getPayments()) {
+            System.out.println(p.toString());
         }
     }
 }
