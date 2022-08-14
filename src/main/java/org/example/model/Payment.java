@@ -1,5 +1,7 @@
 package org.example.model;
 
+import org.json.simple.JSONObject;
+
 public class Payment {
     int year;
     int month;
@@ -11,6 +13,14 @@ public class Payment {
     public Payment() {
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Payment(int year, int month, int day, int delivererId, double amount, String title) {
         this.year = year;
         this.month = month;
@@ -20,7 +30,6 @@ public class Payment {
         this.title = title;
 
     }
-
 
     public int getYear() {
         return year;
@@ -60,6 +69,19 @@ public class Payment {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public JSONObject toJason() {
+        JSONObject paymentJson = new JSONObject();
+
+        paymentJson.put("year", year);
+        paymentJson.put("month", month);
+        paymentJson.put("day", day);
+        paymentJson.put("delivererId", delivererId);
+        paymentJson.put("amount", amount);
+        paymentJson.put("title", title);
+
+        return paymentJson;
     }
 
     @Override

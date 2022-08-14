@@ -1,19 +1,28 @@
 package org.example.model;
 
+import org.json.simple.JSONObject;
+
 public class Deliverer {
 
     private static int noId = 0;
+
     int id;
     String shortName;
     String name;
     String bankAccount;
 
+    public static void setNoId(int noId) {
+        Deliverer.noId = noId;
+    }
+
+    public static int getNoId() {
+        return noId;
+    }
+
     public Deliverer() {
     }
 
     public Deliverer(String shortName, String name, String bankAccount) {
-        noId++;
-        this.id = noId;
         this.shortName = shortName;
         this.name = name;
         this.bankAccount = bankAccount;
@@ -49,6 +58,17 @@ public class Deliverer {
 
     public void setBankAccount(String bankAccount) {
         this.bankAccount = bankAccount;
+    }
+
+    public JSONObject toJason() {
+        JSONObject deliverJson = new JSONObject();
+
+        deliverJson.put("id", id);
+        deliverJson.put("shortName", shortName);
+        deliverJson.put("name", name);
+        deliverJson.put("bankAccount", bankAccount);
+
+        return deliverJson;
     }
 
     @Override

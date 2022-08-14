@@ -3,12 +3,14 @@ package org.example;
 
 import org.example.controler.DelivererController;
 import org.example.controler.JsonFile;
+import org.example.controler.PaymentController;
 import org.example.model.Deliverer;
 import org.example.model.Payment;
 import org.example.repository.DelivererRepository;
 import org.example.repository.PaymentRepository;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
 
@@ -17,53 +19,45 @@ public class Main {
         DelivererRepository delivererRepository = new DelivererRepository();
         PaymentRepository paymentRepository = new PaymentRepository();
         DelivererController delivererController = new DelivererController();
+        PaymentController paymentController = new PaymentController();
+
+        JsonFile outputFile = new JsonFile();
+
+        printAll(delivererRepository, paymentRepository);
+
+       outputFile.readJsonFile(delivererRepository, paymentRepository, "dane.json");
+
+       printAll(delivererRepository, paymentRepository);
+
+        // input from console
+        Scanner scan = new Scanner(System.in).useDelimiter("\\n");
+        delivererRepository.addDeliver(delivererController.setDeliverer(scan));
+        paymentRepository.addPayment(paymentController.setPayment(scan));
+        scan.close();
+
+        outputFile.writeJsonFile(delivererRepository, paymentRepository, "dane.json");
+
+        printAll(delivererRepository, paymentRepository);
+    }
 
 
-        Deliverer deliverer1 = new Deliverer("SOLID", "Solid Sp  z o.o.", "52 1240 6960 2022 0000 0048 9005");
-        Deliverer deliverer2 = new Deliverer("ORANGE", "Orange Polska S.A.", "40 1140 1241 1068 0000 1810 7926");
-
-        delivererRepository.addDeliver(deliverer1);
-        delivererRepository.addDeliver(deliverer2);
-
-        Payment payment1 = new Payment(2022, 5, 12, 1, 30.00d, "monthly payment");
-        paymentRepository.addPayment(payment1);
-        paymentRepository.addPayment(payment1);
-        paymentRepository.addPayment(payment1);
-
-
-        System.out.println("Number of deliverers: " + delivererRepository.deliverers.size());
-        for (Deliverer d1 : delivererRepository.getDeliverers()) {
-            System.out.println(d1);
-        }
-
-        System.out.println("Number of payments: " + paymentRepository.payments.size());
-        for (Payment p1 : paymentRepository.getPayments()) {
-            System.out.println(p1);
-            System.out.println(delivererRepository.getDelivererById(p1.getDelivererId()));
-        }
-
-        System.out.println("Value for deliver no 1 in 2022 on 5: " + paymentRepository.getPaymentValue(2022, 5, 1));
-
-        JsonFile file = new JsonFile();
-
-        file.writeJsonFile(delivererRepository, paymentRepository, "data");
-        file.readJsonFile(delivererRepository, paymentRepository, "data");
-
-        System.out.println("Number of deliverers after reading from file: " + delivererRepository.deliverers.size());
-
+    private static void printAll(DelivererRepository delivererRepository, PaymentRepository paymentRepository) {
+        System.out.println("noId = " + Deliverer.getNoId());
         if (delivererRepository.deliverers.size() > 0) {
             System.out.println(delivererRepository.deliverers.size());
+            for (Deliverer dl: delivererRepository.getDeliverers()) {
+                System.out.println(dl.toString());
+            }
         } else {
             System.out.println("Deliverer Repository is empty!");
         }
         if (paymentRepository.payments.size() > 0) {
             System.out.println(paymentRepository.payments.size());
+            for (Payment pa : paymentRepository.getPayments()) {
+                System.out.println(pa.toString());
+            }
         } else {
             System.out.println("Payment Repository is empty!");
-        }
-
-        for (Payment p : paymentRepository.getPayments()) {
-            System.out.println(p.toString());
         }
     }
 }

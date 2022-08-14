@@ -9,7 +9,7 @@ public class DelivererRepository {
     public List<Deliverer> deliverers = new ArrayList<>();
 
     public DelivererRepository() {
-
+        // read from JSON file
     }
 
     public List<Deliverer> getDeliverers() {
@@ -27,7 +27,7 @@ public class DelivererRepository {
 
     public void addDeliver(final Deliverer deliverer) {
         // add new deliverer
-        this.deliverers.add(deliverer);
+        deliverers.add(deliverer);
     }
 
     public boolean delDeliverer(int delivererId, PaymentRepository repository) {
